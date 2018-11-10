@@ -1,4 +1,4 @@
-class SessionToken {  
+class SessionTokens {  
   constructor(dao) {
     this.dao = dao
   }
@@ -9,7 +9,6 @@ class SessionToken {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       accountId INTEGER,
       token TEXT,
-      createDate DATETIME,
       expiryDate DATETIME,
       CONSTRAINT session_tokens_fk_accountId FOREIGN KEY (accountId)
         REFERENCES accounts(id) ON UPDATE CASCADE ON DELETE CASCADE)`
@@ -51,3 +50,4 @@ class SessionToken {
     return this.dao.all(`SELECT * FROM session_tokens`)
   }
 }
+module.exports = SessionTokens;

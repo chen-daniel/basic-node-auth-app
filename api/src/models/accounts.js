@@ -51,3 +51,5 @@ class Accounts {
     return this.dao.all(`SELECT * FROM accounts`)
   }
 }
+
+module.exports = Accounts;

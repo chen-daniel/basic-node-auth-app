@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/app.js"
+    "start": "node src/app.js",
+    "migrate": "node db/migration.js"
   },
   "author": "",
   "license": "ISC",
@@ -13,6 +14,7 @@
     "bluebird": "^3.5.3",
     "express": "^4.16.4",
     "lodash": "^4.17.11",
+    "moment": "^2.22.2",
     "sqlite3": "^4.0.3"
   }
 }
