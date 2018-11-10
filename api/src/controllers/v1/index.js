@@ -1,5 +1,5 @@
 function helloWorld(req, res) {
-  res.json('Hello World!');
+  res.json({hello: 'world'});
 }
 
 module.exports = {

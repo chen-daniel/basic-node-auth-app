@@ -6,6 +6,8 @@ const config = require('./config');
 
 routes(app);
 
-app.get('/', (req, res) => res.send('Hello World!'))
+const AppDAO = require('../db/appDAO');
+
+const dao = new AppDAO('./app.db');
 
 app.listen(config.port, () => console.log(`App listening on port ${config.port}!`))
