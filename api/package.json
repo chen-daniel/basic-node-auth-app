@@ -2,7 +2,7 @@
   "name": "basic-auth",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,8 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "bluebird": "^3.5.3",
+    "express": "^4.16.4",
     "lodash": "^4.17.11",
-    "sqlite": "^3.0.0",
     "sqlite3": "^4.0.3"
   }
 }
