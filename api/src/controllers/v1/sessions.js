@@ -15,7 +15,7 @@ async function createSession(req, res) {
     dao.close();
     return res.json(result);
   } catch (err) {
-    return res.sendStatus(400);
+    return res.status(400).send('Bad Request');
   }
 }
 
@@ -28,11 +28,11 @@ async function deleteSession(req, res) {
     dao.close();
     return res.json(result);
   } catch (err) {
-    return res.sendStatus(400);
+    return res.status(400).send('Bad Request');
   }
 }
 
 module.exports = {
   createSession: createSession,
-  delete: deleteSession
+  deleteSession: deleteSession
 };

@@ -1,4 +1,4 @@
-const appDAO = require('../../../db/appDAO');
+const appDAO = require('../../db/appDAO');
 const SessionTokens = require('../models/sessionTokens');
 const moment = require('moment');
 
@@ -23,7 +23,7 @@ async function requireSession(req, res) {
       throw error;
     }
   } catch (err) {
-    res.sendState(403);
+    return res.status(403).send('Forbidden');
   }
 }
 

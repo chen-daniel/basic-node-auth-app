@@ -10,8 +10,8 @@ router.get('/helloworld', v1Controller.helloWorld);
 
 router
   .route('/sessions')
-  .post(v1Controller.sessions.create)
-  .delete(v1Controller.sessions.delete);
+  .post(v1Controller.sessions.createSession)
+  .delete(v1Controller.sessions.deleteSession);
 
 router
   .route('/accounts/:accountId')

@@ -1,9 +1,9 @@
-class SessionTokens {  
+class SessionTokens {
   constructor(dao) {
-    this.dao = dao
+    this.dao = dao;
   }
 
-  createTable() {
+  async createTable() {
     const sql = `
     CREATE TABLE IF NOT EXISTS session_tokens (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -11,43 +11,59 @@ class SessionTokens {
       token TEXT,
       expiryDate DATETIME,
       CONSTRAINT session_tokens_fk_accountId FOREIGN KEY (accountId)
-        REFERENCES accounts(id) ON UPDATE CASCADE ON DELETE CASCADE)`
-    return this.dao.run(sql)
+        REFERENCES accounts(id) ON UPDATE CASCADE ON DELETE CASCADE)`;
+    return await Promise.resolve(this.dao.run(sql));
   }
 
-  create(accountId, token) {
-    return this.dao.run(
-      'INSERT INTO session_tokens (accountId, token) VALUES (?, ?)',
-      [accountId, token])
+  async create(accountId, token) {
+    return await Promise.resolve(
+      this.dao.run(
+        'INSERT INTO session_tokens (accountId, token) VALUES (?, ?)',
+        [accountId, token]
+      )
+    ).catch((err) => {
+      console.log(err);
+    });
   }
 
-  update(session_token) {
-    const { id, accountId, token, expiryDate } = session_token
-    return this.dao.run(
-      `UPDATE session_tokens 
+  async update(session_token) {
+    const { id, accountId, token, expiryDate } = session_token;
+    return await Promise.resolve(
+      this.dao.run(
+        `UPDATE session_tokens 
       SET accountId = ?, 
         token = ?, 
         expiryDate = ? 
       WHERE id = ?`,
-      [accountId, token, expiryDate, id]
-    )
+        [accountId, token, expiryDate, id]
+      )
+    ).catch((err) => {
+      console.log(err);
+    });
   }
 
-  delete(id) {
-    return this.dao.run(
-      `DELETE FROM session_tokens WHERE id = ?`,
-      [id]
-    )
+  async delete(id) {
+    return await Promise.resolve(
+      this.dao.run(`DELETE FROM session_tokens WHERE id = ?`, [id])
+    ).catch((err) => {
+      console.log(err);
+    });
   }
 
-  getById(id) {
-    return this.dao.get(
-      `SELECT * FROM session_tokens WHERE id = ?`,
-      [id])
+  async getById(id) {
+    return await Promise.resolve(
+      this.dao.get(`SELECT * FROM session_tokens WHERE id = ?`, [id])
+    ).catch((err) => {
+      console.log(err);
+    });
   }
 
-  getAll() {
-    return this.dao.all(`SELECT * FROM session_tokens`)
+  async getAll() {
+    return await Promise.resolve(
+      this.dao.all(`SELECT * FROM session_tokens`)
+    ).catch((err) => {
+      console.log(err);
+    });
   }
 }
 module.exports = SessionTokens;
