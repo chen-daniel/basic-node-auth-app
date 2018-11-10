@@ -6,9 +6,8 @@ class SessionTokens {
   async createTable() {
     const sql = `
     CREATE TABLE IF NOT EXISTS session_tokens (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
       accountId INTEGER,
-      token TEXT,
+      token TEXT PRIMARY KEY,
       expiryDate DATETIME,
       CONSTRAINT session_tokens_fk_accountId FOREIGN KEY (accountId)
         REFERENCES accounts(id) ON UPDATE CASCADE ON DELETE CASCADE)`;
@@ -42,17 +41,17 @@ class SessionTokens {
     });
   }
 
-  async delete(id) {
+  async delete(token) {
     return await Promise.resolve(
-      this.dao.run(`DELETE FROM session_tokens WHERE id = ?`, [id])
+      this.dao.run(`DELETE FROM session_tokens WHERE token = ?`, [token])
     ).catch((err) => {
       console.log(err);
     });
   }
 
-  async getById(id) {
+  async getById(token) {
     return await Promise.resolve(
-      this.dao.get(`SELECT * FROM session_tokens WHERE id = ?`, [id])
+      this.dao.get(`SELECT * FROM session_tokens WHERE token = ?`, [token])
     ).catch((err) => {
       console.log(err);
     });
