@@ -1,25 +1,25 @@
-const appDAO = require('../../../db/appDAO');
-const Accounts = require('../../models/accounts');
+const AccountsModel = require('../../models/accounts');
+const Accounts = new AccountsModel();
 const _ = require('lodash');
+const bcrypt = require('bcrypt');
 
 async function createAccount(req, res) {
   try {
-    const dao = new appDAO('./db/app.db');
-    const accounts = new Accounts(dao);
-    const accountParams = _.pick(req.body, [
+    const json = JSON.parse(req.body.json);
+    const accountParams = _.pick(json, [
       'username',
       'password',
       'fullName',
       'email'
     ]);
-
-    const result = await accounts.create(
+    const hash = await bcrypt.hashSync(accountParams.password, 5);
+    accountParams.password = hash;
+    const result = await Accounts.create(
       accountParams.username,
       accountParams.password,
       accountParams.fullName,
       accountParams.email
     );
-    dao.close();
     return res.json(result);
   } catch (err) {
     return res.sendStatus(400);
@@ -28,10 +28,8 @@ async function createAccount(req, res) {
 
 async function getAccount(req, res) {
   try {
-    const dao = new appDAO('./db/app.db');
-    const accounts = new Accounts(dao);
-    const result = await accounts.getById(req.params.accountId);
-    dao.close();
+    const result = await Accounts.getById(req.params.accountId);
+    delete result.password;
     return res.json(result);
   } catch (err) {
     return res.sendStatus(400);
@@ -40,24 +38,31 @@ async function getAccount(req, res) {
 
 async function updateAccount(req, res) {
   try {
-    const dao = new appDAO('./db/app.db');
-    const accounts = new Accounts(dao);
     const account = _.pick(req.body, [
       'username',
       'password',
       'fullName',
       'email'
     ]);
-    const result = await accounts.update(account);
-    dao.close();
+    const result = await Accounts.update(account);
     return res.json(result);
   } catch (err) {
     return res.sendStatus(400);
   }
 }
 
+async function getAllAccounts(req, res) {
+  try {
+    const result = await Accounts.getAll();
+    return res.json(result);
+  } catch (err) {
+    return res.status(400).send('Failed');
+  }
+}
+
 module.exports = {
   createAccount: createAccount,
   getAccount: getAccount,
+  getAllAccounts: getAllAccounts,
   updateAccount: updateAccount
 };

@@ -1,11 +1,12 @@
 const appDAO = require('../../db/appDAO');
-const SessionTokens = require('../models/sessionTokens');
+const SessionTokensModel = require('../models/sessionTokens');
+const SessionTokens = new SessionTokensModel();
 const moment = require('moment');
 
 async function requireSession(req, res) {
   try {
-    const token = req.get('Session-Token');
-    const currAccount = req.get('Current-Account');
+    const token = req.get('X-Auth-Token');
+    const currAccount = req.get('X-Curr-Account');
     const dao = new appDAO('./db/app.db');
     const sessionTokens = new SessionTokens(dao);
     const sessionToken = await sessionTokens.getById(token);

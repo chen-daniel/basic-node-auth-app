@@ -14,6 +14,10 @@ router
   .delete(v1Controller.sessions.deleteSession);
 
 router
+  .route('/accounts')
+  .get(v1Controller.accounts.getAllAccounts);
+
+router
   .route('/accounts/:accountId')
   .get(authentication.requireSession, v1Controller.accounts.getAccount)
   .post(v1Controller.accounts.createAccount)

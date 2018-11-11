@@ -1,25 +1,23 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
 
-class App extends Component {
+import Router from './routes/Router';
+import Navbar from './common-components/Navbar/navbar.component';
+
+import { CookiesProvider } from 'react-cookie';
+
+import './App.css';
+class App extends React.Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <CookiesProvider>
+        <div id="wrapper">
+          <Navbar />
+          <div id="content">
+            <Router />
+          </div>
+          <footer id="footer" />
+        </div>
+      </CookiesProvider>
     );
   }
 }

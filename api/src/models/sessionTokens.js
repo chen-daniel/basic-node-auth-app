@@ -1,68 +1,73 @@
+const appDAO = require('../../db/appDAO');
+
 class SessionTokens {
-  constructor(dao) {
-    this.dao = dao;
+  connectDAO() {
+    this.dao = new appDAO('./db/app.db');
   }
 
   async createTable() {
+    this.connectDAO();
     const sql = `
     CREATE TABLE IF NOT EXISTS session_tokens (
-      accountId INTEGER,
-      token TEXT PRIMARY KEY,
+      accountId INTEGER NOT NULL,
+      token TEXT PRIMARY KEY UNIQUE NOT NULL,
       expiryDate DATETIME,
       CONSTRAINT session_tokens_fk_accountId FOREIGN KEY (accountId)
         REFERENCES accounts(id) ON UPDATE CASCADE ON DELETE CASCADE)`;
-    return await Promise.resolve(this.dao.run(sql));
+    const response = await this.dao.run(sql);
+    this.dao.close();
+    return response;
   }
 
-  async create(accountId, token) {
-    return await Promise.resolve(
-      this.dao.run(
-        'INSERT INTO session_tokens (accountId, token) VALUES (?, ?)',
-        [accountId, token]
-      )
-    ).catch((err) => {
-      console.log(err);
-    });
+  async create(accountId, token, expiryDate) {
+    this.connectDAO();
+    const response = await this.dao.run(
+      'INSERT INTO session_tokens (accountId, token, expiryDate) VALUES (?, ?, ?)',
+      [accountId, token, expiryDate]
+    );
+    this.dao.close();
+    return response;
   }
 
   async update(session_token) {
-    const { id, accountId, token, expiryDate } = session_token;
-    return await Promise.resolve(
-      this.dao.run(
-        `UPDATE session_tokens 
+    this.connectDAO();
+    const { accountId, token, expiryDate } = session_token;
+    const response = await this.dao.run(
+      `UPDATE session_tokens 
       SET accountId = ?, 
-        token = ?, 
         expiryDate = ? 
-      WHERE id = ?`,
-        [accountId, token, expiryDate, id]
-      )
-    ).catch((err) => {
-      console.log(err);
-    });
+      WHERE token = ?`,
+      [accountId, token, expiryDate]
+    );
+    this.dao.close();
+    return response;
   }
 
   async delete(token) {
-    return await Promise.resolve(
-      this.dao.run(`DELETE FROM session_tokens WHERE token = ?`, [token])
-    ).catch((err) => {
-      console.log(err);
-    });
+    this.connectDAO();
+    const response = await this.dao.run(
+      `DELETE FROM session_tokens WHERE token = ?`,
+      [token]
+    );
+    this.dao.close();
+    return response;
   }
 
   async getById(token) {
-    return await Promise.resolve(
-      this.dao.get(`SELECT * FROM session_tokens WHERE token = ?`, [token])
-    ).catch((err) => {
-      console.log(err);
-    });
+    this.connectDAO();
+    const response = await this.dao.get(
+      `SELECT * FROM session_tokens WHERE token = ?`,
+      [token]
+    );
+    this.dao.close();
+    return response;
   }
 
   async getAll() {
-    return await Promise.resolve(
-      this.dao.all(`SELECT * FROM session_tokens`)
-    ).catch((err) => {
-      console.log(err);
-    });
+    this.connectDAO();
+    const response = await this.dao.all(`SELECT * FROM session_tokens`);
+    this.dao.close();
+    return response;
   }
 }
 module.exports = SessionTokens;
